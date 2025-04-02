@@ -1,17 +1,15 @@
-// Package tools that register mcp tool to server
+// Package calculator that register calculator to server
 package calculator
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"log"
+	toolutils "mcpMathPractice/tools/utils"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
-
-// Calculator is to mimic the real tool that need an struct to carry information
-type Calculator struct{}
 
 // NewTool describe how to use Handle to LLM Module
 func NewTool() mcp.Tool {
@@ -22,12 +20,24 @@ func NewTool() mcp.Tool {
 
 		mcp.WithString("operation",
 			mcp.Required(),
-			mcp.Description(),
+			mcp.Description("The operation to perform (add, subtract, multiply, divide)"),
+			mcp.Enum("add", "substract", "multiply", "divide"),
+		),
+
+		mcp.WithNumber("x",
+			mcp.Required(),
+			mcp.Description("First number that the operation will take"),
+		),
+
+		mcp.WithNumber("y",
+			mcp.Required(),
+			mcp.Description("Second number that the operation will take"),
 		),
 	)
 
 }
 
+// Handle is the real function that mcp server will execute for  LLM
 func Handle(_ context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	op := request.Params.Arguments["operation"].(string)
 	x := request.Params.Arguments["x"].(float64)
@@ -43,9 +53,12 @@ func Handle(_ context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult
 		result = x * y
 	case "divide":
 		if y == 0 {
-			return nil, errors.New("Cannot divide by zero")
+			// 下面這個funn
+			return toolutils.NewToolResultError("Cannot divide by zero"), nil
 		}
 		result = x / y
+	default:
+		return toolutils.NewToolResultError("This Method not allow"), nil
 	}
 
 	return mcp.NewToolResultText(fmt.Sprintf("%.2f", result)), nil
@@ -54,4 +67,5 @@ func Handle(_ context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult
 // Register tool to server
 func Register(s *server.MCPServer) {
 	s.AddTool(NewTool(), Handle)
+	log.Printf("Registered tool: calculate")
 }
