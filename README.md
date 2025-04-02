@@ -1,7 +1,3 @@
-# 目標
-
-希望可以做出可以自己打 API 來測試 API 有沒有符合需求的 MCP
-
 # 參考
 
 - [認識 MCP Go 工具](https://ganhua.wang/mcp-go)
@@ -137,7 +133,8 @@ go build .
 
 ![](./README/cline_mcp_setting.png)
 
-```
+這邊我是用wsl所以 command 需要用wsl.exe才能連到 我的路徑
+```json
 {
   "mcpServers": {
     "example1": {
