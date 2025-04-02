@@ -34,7 +34,7 @@ data: /message?sessionId=f87b44d2-4bb3-48f8-b975-15b60de7ea14
 
 > 測試Initialization
 
-> [!Tip] MCP 連線的 LifeCycle
+> [!Note] MCP 連線的 LifeCycle
 > Client 從建立連線開始到結束會經歷 3 個階段，其中最重要的是 Initializeation 階段的準備。這階段就是提供 MCP Server 具體功能清單的階段。
 > - Initialization: Capability negotiation and protocol version agreement
 > - Operation: Normal protocol communication
